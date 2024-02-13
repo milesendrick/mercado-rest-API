@@ -5,12 +5,13 @@ import fs from "fs"
 
 let users: Users = loadUsers()
 
+
 function loadUsers () : Users {
 	try {
 		const data = fs.readFileSync("./users.json", "utf-8")
 		return JSON.parse(data)
 	} catch (error) {
-		console.log('Error ${error}')
+		console.log(`Error ${error}`)
 		return {}
 	}
 }
@@ -18,9 +19,9 @@ function loadUsers () : Users {
 function saveUsers () {
 	try {
 		fs.writeFileSync("./users.json", JSON.stringify(users), "utf-8")
-		console.log('User saved successfully!' )
+		console.log(`User saved successfully!`)
 	} catch (error) {
-		console.log('Error : ${error}')
+		console.log(`Error : ${error}`)
 	}
 }
 
@@ -120,3 +121,13 @@ export const remove = async (id : string) : Promise<null | void> => {
 
 	saveUsers()
 }
+
+export const searchByName = async (name: string): Promise<UnitUser[]> => {
+    const allUsers = await findAll();
+    return allUsers.filter(user => user.username.toLowerCase().includes(name.toLowerCase()));
+};
+
+export const searchByEmail = async (partialEmail: string): Promise<UnitUser[]> => {
+    const allUsers = await findAll();
+    return allUsers.filter(user => user.email.toLowerCase().includes(partialEmail.toLowerCase()));
+};
